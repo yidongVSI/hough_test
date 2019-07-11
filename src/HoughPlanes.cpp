@@ -2,7 +2,8 @@
  * This program accepts a vtp file containing a point cloud and attempts to fit many planes
  * to the points. The output is a vtp file containing the input points colored by which plane,
  * if any, they belong to. The colors of the planes are randomly assigned.
- */ 
+ */
+#include <fstream>
 
 #include <vtkSmartPointer.h>
 #include <vtkXMLPolyDataReader.h>
@@ -13,7 +14,7 @@
 int main(int argc, char *argv[])
 {
   // Verify command line arguments
-  if(argc < 3)
+  if (argc < 3)
   {
     std::cerr << "Usage: " << argv[0] << " input.vtp output.vtp" << endl;
     exit(0);
@@ -25,12 +26,12 @@ int main(int argc, char *argv[])
 
   // Read the input file
   vtkSmartPointer<vtkXMLPolyDataReader> reader =
-    vtkSmartPointer<vtkXMLPolyDataReader>::New();
+      vtkSmartPointer<vtkXMLPolyDataReader>::New();
   reader->SetFileName(inputFileName.c_str());
   reader->Update();
-  
+
   vtkSmartPointer<vtkHoughPlanes> houghPlanes =
-    vtkSmartPointer<vtkHoughPlanes>::New();
+      vtkSmartPointer<vtkHoughPlanes>::New();
   houghPlanes->SetInputConnection(reader->GetOutputPort());
   houghPlanes->SetMaxDist(2.00);
   houghPlanes->SetMinDist(0.10);
@@ -58,6 +59,26 @@ int main(int argc, char *argv[])
   writer->SetInputConnection(houghPlanes->GetOutputPort());
   writer->SetFileName(outputFileName.c_str());
   writer->Write();
-  
+
+  // write out xyzRGB
+  std::string outputFileNameXYZ = outputFileName + ".xyz";
+  ofstream ofs;
+  ofs.open(outputFileNameXYZ.c_str());
+  ofs << "x y z r g b\n";
+  vector<Point> out_pts = houghPlanes->get_Hough().coloredPoints;
+  for (vector<Point>::iterator it = out_pts.begin(); it != out_pts.end(); ++it)
+  {
+    ofs << std::setprecision(10)
+        << it->x << ' ' << it->y << ' ' << it->z << ' '
+        << (int)it->rgb[0] << ' ' << (int)it->rgb[1] << ' ' << (int)it->rgb[2]
+        << std::endl;
+    std::cout << std::setprecision(8)
+              << "Point: (" << it->x << ' ' << it->y << ' ' << it->z << ')'
+              << " Color: (" << (int)it->rgb[0] << ' ' << (int)it->rgb[1] << ' ' << (int)it->rgb[2] << ')'
+              << std::endl;
+  }
+  ofs.close();
+  // Write output as xyzRGB
+
   return EXIT_SUCCESS;
 }

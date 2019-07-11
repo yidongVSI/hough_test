@@ -15,7 +15,7 @@ public:
   void PrintSelf(ostream& os, vtkIndent indent);
 
   static vtkHoughPlanes *New();
-  
+
   void SetMaxDist(double ); // maximum distance between points
   void SetMinDist(double ); // minimum distance between points
   void SetAccumulatorMax(unsigned int ); // plane detected if Hough cell reaches AccumulatorMax
@@ -36,7 +36,9 @@ public:
   void SetAccumulatorType(unsigned int ); // Array 0, Ball 1, Cube 2, BallI 3
 
   void SetHoughAlgorithm(HoughAlgorithmEnum); // Specify which version of the Hough transform algorithm to use
-  
+
+  Hough& get_Hough() { return m_Hough; }
+
 protected:
   vtkHoughPlanes();
   ~vtkHoughPlanes(){}
@@ -46,7 +48,7 @@ protected:
   HoughAlgorithmEnum HoughAlgorithm;
 
   Hough m_Hough;
-  
+
 private:
   vtkHoughPlanes(const vtkHoughPlanes&);  // Not implemented.
   void operator=(const vtkHoughPlanes&);  // Not implemented.

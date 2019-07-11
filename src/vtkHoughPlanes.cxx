@@ -190,7 +190,7 @@ int vtkHoughPlanes::RequestData(vtkInformation *vtkNotUsed(request),
   while(itr != this->m_Hough.coloredPoints.end())
     {
     p = *(itr);
-    colors->InsertNextTupleValue(p.rgb);
+    colors->InsertNextTypedTuple(p.rgb);
     outputPoints->InsertNextPoint(p.x, p.y, p.z);
     itr++;
     }
@@ -201,7 +201,7 @@ int vtkHoughPlanes::RequestData(vtkInformation *vtkNotUsed(request),
   while(itr != this->m_Hough.allPoints->end())
     {
     p = *(itr);
-    colors->InsertNextTupleValue(gray);
+    colors->InsertNextTypedTuple(gray);
     outputPoints->InsertNextPoint(p.x, p.y, p.z);
     itr++;
     }

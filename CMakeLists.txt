@@ -1,9 +1,11 @@
-cmake_minimum_required (VERSION 2.6.1)
+cmake_minimum_required (VERSION 3.10.2)
 
 project (HoughPlanes)
 
+find_package(yaml-cpp REQUIRED)
+
 FIND_PACKAGE(VTK REQUIRED)
-INCLUDE(${VTK_USE_FILE})
+INCLUDE_DIRECTORIES(${VTK_USE_FILE})
 
 ## Use OpenMP if it is available
 FIND_PACKAGE(OpenMP)

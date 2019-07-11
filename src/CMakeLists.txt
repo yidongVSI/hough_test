@@ -11,3 +11,9 @@ endif()
 # The following executable is the provided example code, as well as demonstrates how to link to the code in this repository.
 add_executable(HoughPlanes HoughPlanes.cpp)
 target_link_libraries(HoughPlanes hough)
+
+add_executable(VisResult visualize_vtp.cpp)
+target_link_libraries(VisResult hough)
+
+add_executable(ConvertPtsToVTK ConvertPtsToVTK.cpp)
+target_link_libraries(ConvertPtsToVTK hough yaml-cpp)
